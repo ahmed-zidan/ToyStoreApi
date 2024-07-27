@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using ToyStore.Api.DTOS;
+using ToyStore.Core.Models;
 
 namespace ToyStore.Api.Helpers
 {
@@ -6,7 +8,8 @@ namespace ToyStore.Api.Helpers
     {
         public AppMapper()
         {
-            
+            CreateMap<AddCategoryDto, Category>();
+            CreateMap<UpdateCategoryDto, Category>();
         }
     }
 }
