@@ -20,4 +20,8 @@
     <ProjectReference Include="..\ToyStore.Infrastructure\ToyStore.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Resources\Images\" />
+  </ItemGroup>
+
 </Project>

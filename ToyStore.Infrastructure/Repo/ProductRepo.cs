@@ -29,17 +29,17 @@ namespace ToyStore.Infrastructure.Repo
 
         public async Task<Product> GetProductByIdAsync(int id)
         {
-            return await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Products.Include(x=>x.Category).FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<Product> GetProductByNameAsync(string Name)
         {
-            return await _context.Products.FirstOrDefaultAsync(x => x.Name == Name);
+            return await _context.Products.Include(x=>x.Category).FirstOrDefaultAsync(x => x.Name == Name);
         }
 
         public async Task<IEnumerable<Product>> GetProductsAsync(int categoryId)
         {
-            return await _context.Products.Where(x=>x.CategotyId == categoryId).ToListAsync();    
+            return await _context.Products.Include(x=>x.Category).Where(x=>x.CategotyId == categoryId).ToListAsync();    
         }
 
         public void Update(Product model)

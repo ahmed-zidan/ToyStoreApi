@@ -10,6 +10,10 @@ namespace ToyStore.Api.Helpers
         {
             CreateMap<AddCategoryDto, Category>();
             CreateMap<UpdateCategoryDto, Category>();
+            CreateMap<Product, ProductDto>().
+                ForMember(dst=>dst.CategoryName , y=>y.MapFrom(x=>x.Category.Name))
+                .ForMember(x=>x.ImageUrl , y=>y.MapFrom<ProductImageResolver>());
+            CreateMap<AddProductDto, Product>();
         }
     }
 }
