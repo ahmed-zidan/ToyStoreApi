@@ -10,10 +10,11 @@ namespace ToyStore.Core.IRepository
     public interface IProductRepo
     {
         Task AddAsync(Product model);
-        Task<IEnumerable<Product>> GetProductsAsync(int categoryId);
+        Task<IEnumerable<Product>> GetProductsAsync(int ?categoryId,string?search , string ?sorting , int startPage, int pageSize);
         Task<Product> GetProductByIdAsync(int id);
         Task<Product> GetProductByNameAsync(string Name);
         void Update(Product model);
         void Delete(Product models);
+        Task<int> productCout(int? categoryId, string? search);
     }
 }

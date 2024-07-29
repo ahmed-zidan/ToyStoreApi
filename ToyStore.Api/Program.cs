@@ -1,5 +1,6 @@
 
 
+using StackExchange.Redis;
 using ToyStore.Api.Extensions;
 using ToyStore.Api.Middlewares;
 
@@ -20,6 +21,13 @@ namespace ToyStore.Api
             builder.Services.AddSwaggerGen();
             builder.Services.AddApplicationServices(builder.Configuration);
             builder.Services.AddIdentityServices(builder.Configuration);
+
+            builder.Services.AddSingleton<IConnectionMultiplexer>(x => {
+                var configuration = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("Redis"), true);
+                return ConnectionMultiplexer.Connect(configuration);
+            });
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -30,8 +38,9 @@ namespace ToyStore.Api
             }
 
             app.UseMiddleware < ExceptionMiddleware>();
-            app.UseHttpsRedirection();
 
+            app.UseHttpsRedirection();
+            app.UseCors();
             app.UseAuthorization();
             app.UseAuthentication();
 

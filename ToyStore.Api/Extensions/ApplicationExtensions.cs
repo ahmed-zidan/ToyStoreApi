@@ -1,5 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using StackExchange.Redis;
 using ToyStore.Api.Errors;
 using ToyStore.Api.Helpers;
 using ToyStore.Core.IRepository;
@@ -11,6 +13,7 @@ namespace ToyStore.Api.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services,IConfiguration configuration) {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IBasketService, BasketService>();
             services.AddAutoMapper(typeof(AppMapper));
             services.Configure<ApiBehaviorOptions>(opt =>
             {
@@ -26,6 +29,17 @@ namespace ToyStore.Api.Extensions
                     return new BadRequestObjectResult(errorResponse);
                 };
             });
+
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("CorsPolicy", pol =>
+                {
+                    pol.AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .WithOrigins("http://localhost:5255");
+                });
+            });
+
             return services;
         }
     }

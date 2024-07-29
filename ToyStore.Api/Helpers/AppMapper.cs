@@ -14,6 +14,7 @@ namespace ToyStore.Api.Helpers
                 ForMember(dst=>dst.CategoryName , y=>y.MapFrom(x=>x.Category.Name))
                 .ForMember(x=>x.ImageUrl , y=>y.MapFrom<ProductImageResolver>());
             CreateMap<AddProductDto, Product>();
+            CreateMap<CustomerBasketDto , Basket>();    
         }
     }
 }

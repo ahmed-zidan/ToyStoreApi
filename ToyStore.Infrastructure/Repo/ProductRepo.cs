@@ -37,9 +37,46 @@ namespace ToyStore.Infrastructure.Repo
             return await _context.Products.Include(x=>x.Category).FirstOrDefaultAsync(x => x.Name == Name);
         }
 
-        public async Task<IEnumerable<Product>> GetProductsAsync(int categoryId)
+        public async Task<IEnumerable<Product>> GetProductsAsync(int? categoryId, string? search, string? sorting, int startPage = 0, int pageSize = 10)
         {
-            return await _context.Products.Include(x=>x.Category).Where(x=>x.CategotyId == categoryId).ToListAsync();    
+          
+            var products = _context.Products.Include(x=>x.Category).AsQueryable();
+
+            if (categoryId != null)
+            {
+                products = products.Where(x=>x.CategotyId == categoryId);
+            }
+            if(search != null)
+            {
+                products = products.Where(x => x.Name.ToLower().Contains(search.ToLower()));
+            }
+            if (sorting != null) {
+
+                products = sorting switch
+                {
+                    "PriceAsc" => products.OrderBy(x => x.Price),
+                    "PriceDesc"=>products.OrderByDescending(x=>x.Price),
+                    _=>products.OrderBy(x=>x.Name)
+                };
+            }
+
+            return await products.Skip(startPage * pageSize).Take(pageSize).ToListAsync();
+        }
+
+        public async Task<int> productCout(int? categoryId , string?search)
+        {
+            var products = _context.Products.AsQueryable();
+            if (categoryId != null)
+            {
+              products = products.Where(x=>x.CategotyId==categoryId);
+            }
+           
+            if(search != null)
+            {
+                products = products.Where(x => x.Name.ToLower().Contains(search.ToLower()));
+            }
+
+            return await products.CountAsync();
         }
 
         public void Update(Product model)

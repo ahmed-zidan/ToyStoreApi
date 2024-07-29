@@ -32,12 +32,14 @@ namespace ToyStore.Api.Controllers
             return Ok(prDto);
         }
 
-        [HttpGet("getProductsByCategory/{id}")]
-        public async Task<ActionResult> getProductsByCategory(int id)
+        [HttpGet("getAllProducts")]
+        public async Task<ActionResult> getProductsByCategory(int ?categoryId , string?search , string ?sorting, int pageIdx = 0,int pageSize = 10)
         {
-            var pr = await _unitOfWork._productRepo.GetProductsAsync(id);
+            var pr = await _unitOfWork._productRepo.GetProductsAsync(categoryId,search, sorting , pageIdx,pageSize);
+            int totalCount = await _unitOfWork._productRepo.productCout(categoryId,search);
             var prDto = _mapper.Map<List<ProductDto>>(pr);
-            return Ok(prDto);
+            return Ok(new ProductPaginationDto() { PageCount= (int)Math.Ceiling(totalCount*1.0/pageSize), PageNumber=pageIdx,PageSize=prDto.Count(),
+            Products = prDto});
         }
 
         [HttpPost("addProduct")]
@@ -92,6 +94,8 @@ namespace ToyStore.Api.Controllers
             if (pr == null) { 
                 return NotFound(new ApiResponse(404));
             }
+            FileHelper file = new FileHelper(_env);
+            file.DeleteImage(pr.PictureUrl);
             _unitOfWork._productRepo.Delete(pr);
             if (!await _unitOfWork.saveChangesAsync()) {
                 return BadRequest(new ApiResponse(400));
