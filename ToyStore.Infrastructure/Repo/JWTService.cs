@@ -24,7 +24,8 @@ namespace ToyStore.Infrastructure.Repo
             var claims = new Claim[]
           {
                  new Claim(JwtRegisteredClaimNames.NameId,user.Id),
-                 new Claim(JwtRegisteredClaimNames.Email,user.Email)
+                 new Claim(JwtRegisteredClaimNames.Email,user.Email),
+                 new Claim(ClaimTypes.Role,user.Role)
           };
 
             var signingCredintiels = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature

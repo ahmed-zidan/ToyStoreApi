@@ -14,7 +14,14 @@ namespace ToyStore.Api.Helpers
                 ForMember(dst=>dst.CategoryName , y=>y.MapFrom(x=>x.Category.Name))
                 .ForMember(x=>x.ImageUrl , y=>y.MapFrom<ProductImageResolver>());
             CreateMap<AddProductDto, Product>();
-            CreateMap<CustomerBasketDto , Basket>();    
+            CreateMap<BasketItemDto, BasketItem>();
+            CreateMap<CustomerBasketDto , Basket>();
+            CreateMap<RegisterDto, AppUser>()
+                .ForMember(x=>x.Role , y=>y.MapFrom(dst=>"User")); 
+
+            CreateMap<AddAddressDto, Address>();
+            CreateMap<Address, AddressDto>();
+           
         }
     }
 }

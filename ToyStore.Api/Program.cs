@@ -41,11 +41,10 @@ namespace ToyStore.Api
 
             app.UseHttpsRedirection();
             app.UseCors();
-            app.UseAuthorization();
             app.UseAuthentication();
-
+            app.UseAuthorization();
             app.MapControllers();
-
+            ApplicationExtensions.InfrastructureConfigMiddleware(app);
             app.Run();
         }
     }

@@ -52,7 +52,7 @@ namespace ToyStore.Api.Controllers
             }
             else
             {
-                return NotFound(new ApiResponse(400, "Bad Request"));
+                return BadRequest(new ApiResponse(400, "Bad Request"));
             }
         }
     }

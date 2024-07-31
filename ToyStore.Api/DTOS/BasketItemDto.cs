@@ -17,7 +17,7 @@ namespace ToyStore.Api.DTOS
         [Required]
         public string PictureUrl { get; set; }
         [Required]
-        public string CategoryId { get; set; }
+        public int CategoryId { get; set; }
         [Required]
         public string CategoryName { get; set; }
         
