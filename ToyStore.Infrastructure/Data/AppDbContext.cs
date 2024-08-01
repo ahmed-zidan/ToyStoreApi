@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using ToyStore.Core.Models;
+using ToyStore.Core.Models.Orders;
 
 namespace ToyStore.Infrastructure.Data
 {
@@ -26,5 +27,9 @@ namespace ToyStore.Infrastructure.Data
         public DbSet<AppUser> Users { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
+
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<DeliveryMethod> DeliveryMethods { get; set; }
     }
 }

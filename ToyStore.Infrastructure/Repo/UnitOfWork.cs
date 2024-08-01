@@ -20,6 +20,10 @@ namespace ToyStore.Infrastructure.Repo
 
         public ICategoryRepo _categoryRepo => new CategoryRepo(_context);
 
+        public IOrderRepo _orderRepo => new OrderRepo(_context);
+
+        public IDeliveryMethodRepo _deliveryRepo => new DeliveryMethodRepo(_context);
+
         public async Task<bool> saveChangesAsync()
         {
             return await _context.SaveChangesAsync() > 0;

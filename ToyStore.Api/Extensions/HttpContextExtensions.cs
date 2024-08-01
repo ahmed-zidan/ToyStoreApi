@@ -8,5 +8,10 @@ namespace ToyStore.Api.Extensions
         {
             return context.User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).FirstOrDefault()?.Value??" ";
         }
+
+        public static string getCurrentUserEmail(this HttpContext context)
+        {
+            return context.User.Claims.Where(x => x.Type == ClaimTypes.Email).FirstOrDefault()?.Value ?? " ";
+        }
     }
 }

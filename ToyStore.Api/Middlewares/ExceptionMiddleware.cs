@@ -33,7 +33,7 @@ namespace ToyStore.Api.Middlewares
                 };
                 var responseApi = JsonSerializer.Serialize(response, opt);
 
-                context.Response.WriteAsync(responseApi);
+                await context.Response.WriteAsync(responseApi);
             
             }
         

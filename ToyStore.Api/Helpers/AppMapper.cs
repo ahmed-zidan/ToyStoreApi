@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ToyStore.Api.DTOS;
 using ToyStore.Core.Models;
+using ToyStore.Core.Models.Orders;
 
 namespace ToyStore.Api.Helpers
 {
@@ -21,6 +22,7 @@ namespace ToyStore.Api.Helpers
 
             CreateMap<AddAddressDto, Address>();
             CreateMap<Address, AddressDto>();
+            CreateMap<ShipAddress, ShipAddressDto>();
            
         }
     }
