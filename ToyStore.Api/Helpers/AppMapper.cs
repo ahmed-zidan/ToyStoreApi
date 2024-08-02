@@ -23,6 +23,13 @@ namespace ToyStore.Api.Helpers
             CreateMap<AddAddressDto, Address>();
             CreateMap<Address, AddressDto>();
             CreateMap<ShipAddress, ShipAddressDto>();
+
+            CreateMap<OrderItem, OrderItemToReturnDto>()
+                .ForMember(x => x.ProductId, y => y.MapFrom(src => src.ProductItemOrder.ProductId))
+                .ForMember(x => x.ProductName, y => y.MapFrom(src => src.ProductItemOrder.ProductName))
+                .ForMember(x => x.PictureUrl, y => y.MapFrom<OrderImageResolver>());
+
+            CreateMap<Order, OrderToReturnDto>();
            
         }
     }

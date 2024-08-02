@@ -12,7 +12,7 @@ using ToyStore.Core.Models.Orders;
 
 namespace ToyStore.Api.Controllers
 {
-  
+    [Authorize]
     public class OrderController : BaseController
     {
         private readonly IMapper _mapper;
@@ -26,7 +26,7 @@ namespace ToyStore.Api.Controllers
         }
 
         [HttpPost("addOrder")]
-        [Authorize]
+        
         public async Task<IActionResult> addOrder(AddOrderDto model)
         {
             var basket = await _basket.getBasket(model.basketId);
@@ -47,7 +47,6 @@ namespace ToyStore.Api.Controllers
         }
 
         [HttpGet("getOrders")]
-        [Authorize]
         public async Task<IActionResult> getOrders()
         {
             var userEmail = HttpContext.getCurrentUserEmail();
@@ -56,8 +55,26 @@ namespace ToyStore.Api.Controllers
             {
                 return NotFound(new ApiResponse(404, "No Orders"));
             }
-            
-            return Ok(order);   
+            return Ok(_mapper.Map<List<OrderToReturnDto>>(order));   
+        }
+
+        [HttpGet("getDeliveryMethods")]
+        public async Task<IActionResult> getDeliveryMethods()
+        {
+            return Ok(await _uow._deliveryRepo.getDeliveryMethodsAsync());
+        }
+
+        [HttpGet("getOrder/{id}")]
+        public async Task<IActionResult> getOrder(int id)
+        {
+            var email = HttpContext.getCurrentUserEmail();
+            var order = await _uow._orderRepo.getOrderByIdAsync(id,email);
+            if(order == null)
+            {
+                return BadRequest(new ApiResponse(400));
+            }
+            var orderDto = _mapper.Map<OrderToReturnDto>(order);
+            return Ok(orderDto);
         }
     }
 }

@@ -7,20 +7,21 @@ namespace ToyStore.Api.Helpers
 {
     public class ProductImageResolver : IValueResolver<Product, ProductDto, string>
     {
-        private readonly IWebHostEnvironment _hostEnvironment;
-        public ProductImageResolver(IWebHostEnvironment hostEnvironment)
+        private readonly IConfiguration _configuration;
+        public ProductImageResolver(IConfiguration configuration)
         {
-            _hostEnvironment = hostEnvironment;
+            _configuration = configuration;
         }
 
         public string Resolve(Product source, ProductDto destination, string destMember, ResolutionContext context)
         {
-            if (string.IsNullOrWhiteSpace(source.PictureUrl)) {
-                return "";
+            if (!string.IsNullOrEmpty(source.PictureUrl))
+            {
+                return _configuration["ApiUrl"] + source.PictureUrl;
             }
             else
             {
-                return new FileHelper(_hostEnvironment).getFullPath(source.PictureUrl);
+                return _configuration["ApiUrl"] + "Resources/Images/Default.png";
             }
         }
     }

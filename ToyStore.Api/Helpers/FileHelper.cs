@@ -37,7 +37,7 @@ namespace ToyStore.Api.Helpers
                 var stream = new FileStream(fileWithPath, FileMode.Create);
                 imageFile.CopyTo(stream);
                 stream.Close();
-                return new Tuple<int, string>(1, newFileName);
+                return new Tuple<int, string>(1, "Resources/Images/" + newFileName);
             
           
         }
@@ -52,7 +52,7 @@ namespace ToyStore.Api.Helpers
         public string getFullPath(string imageFileName)
         {
             var contentPath = this.environment.ContentRootPath;
-            return Path.Combine(contentPath, $"Resources", "Images", imageFileName);
+            return Path.Combine(contentPath, imageFileName);
         }
     }
 }
