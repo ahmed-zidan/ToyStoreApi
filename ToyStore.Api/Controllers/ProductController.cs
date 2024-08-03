@@ -33,9 +33,9 @@ namespace ToyStore.Api.Controllers
         }
 
         [HttpGet("getAllProducts")]
-        public async Task<ActionResult> getProductsByCategory(int ?categoryId , string?search , string ?sorting, int pageIdx = 0,int pageSize = 10)
+        public async Task<ActionResult> getProductsByCategory(int categoryId , string?search , string ?sorting, int pageIdx = 0,int pageSize = 10)
         {
-            var pr = await _unitOfWork._productRepo.GetProductsAsync(categoryId,search, sorting , pageIdx,pageSize);
+            var pr = await _unitOfWork._productRepo.GetProductsAsync(categoryId == 0?null:categoryId,search, sorting , pageIdx,pageSize);
             int totalCount = await _unitOfWork._productRepo.productCout(categoryId,search);
             var prDto = _mapper.Map<List<ProductDto>>(pr);
             return Ok(new ProductPaginationDto() { PageCount= (int)Math.Ceiling(totalCount*1.0/pageSize), PageNumber=pageIdx,PageSize=prDto.Count(),

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ToyStore.Api.DTOS;
@@ -10,6 +11,7 @@ using ToyStore.Infrastructure.Repo;
 
 namespace ToyStore.Api.Controllers
 {
+    [Authorize]
     public class CategoryController : BaseController
     {
         private readonly IUnitOfWork _uow;
@@ -23,6 +25,7 @@ namespace ToyStore.Api.Controllers
         }
 
         [HttpGet("getAll")]
+        [AllowAnonymous]
         public async Task<ActionResult> GetAll()
         {
             var cat = await _uow._categoryRepo.GetCategoriesAsync();
@@ -30,6 +33,7 @@ namespace ToyStore.Api.Controllers
         }
 
         [HttpGet("getCategory/{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult> getCategory(int id)
         {
             var cat = await _uow._categoryRepo.GetCategoryByIdAsync(id);
