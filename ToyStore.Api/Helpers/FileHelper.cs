@@ -14,7 +14,7 @@ namespace ToyStore.Api.Helpers
         public Tuple<int, string> SaveImage(IFormFile imageFile)
         {
             
-                var contentPath = this.environment.ContentRootPath;
+                var contentPath = this.environment.WebRootPath;
                 // path = "c://projects/productminiapi/uploads" ,not exactly something like that
                 var path = Path.Combine(contentPath, "Resources","Images");
                 if (!Directory.Exists(path))
@@ -51,9 +51,10 @@ namespace ToyStore.Api.Helpers
 
         public string getFullPath(string imageFileName)
         {
-            var contentPath = this.environment.ContentRootPath;
+            var contentPath = this.environment.WebRootPath;
             return Path.Combine(contentPath, imageFileName);
         }
+
     }
 }
 

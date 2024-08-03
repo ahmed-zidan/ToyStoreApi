@@ -109,7 +109,6 @@ namespace ToyStore.Api.Controllers
             {
                 var fileHelper = new FileHelper(_env);
                 var res = fileHelper.SaveImage(file);
-                await _unitOfWork.saveChangesAsync();
                 return res.Item2;
             }
             else

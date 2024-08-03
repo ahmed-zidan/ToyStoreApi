@@ -21,7 +21,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Resources\Images\" />
+    <None Include="wwwroot\Resources\Images\553b17bd-2a1e-4b1d-b527-f02fcc8484ac.jpg" />
+    <None Include="wwwroot\Resources\Images\Default.png" />
+    <None Include="wwwroot\Resources\Images\e068ecb7-1d73-479d-b851-59e3b5b47ec2.jpg" />
+    <None Include="wwwroot\Resources\Images\e864d5a1-2711-4819-8870-941a14cce5fd.jpg" />
+    <None Include="wwwroot\Resources\Images\MainImage.jpg" />
   </ItemGroup>
 
 </Project>

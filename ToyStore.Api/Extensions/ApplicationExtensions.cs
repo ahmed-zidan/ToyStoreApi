@@ -35,15 +35,9 @@ namespace ToyStore.Api.Extensions
                 };
             });
 
-            services.AddCors(opt =>
-            {
-                opt.AddPolicy("CorsPolicy", pol =>
-                {
-                    pol.AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .WithOrigins("http://localhost:5255");
-                });
-            });
+            services.AddCors(p => p.AddDefaultPolicy(build => {
+                build.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
+            }));
 
             return services;
         }

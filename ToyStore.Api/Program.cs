@@ -38,9 +38,10 @@ namespace ToyStore.Api
             }
 
             app.UseMiddleware < ExceptionMiddleware>();
-
-            app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseCors();
+            app.UseHttpsRedirection();
+            
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();

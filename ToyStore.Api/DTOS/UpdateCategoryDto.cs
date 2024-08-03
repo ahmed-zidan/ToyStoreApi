@@ -10,5 +10,6 @@ namespace ToyStore.Api.DTOS
         public string Name { get; set; }
         [Required]
         public string Description { get; set; }
+        public IFormFile? Image { get; set; }
     }
 }

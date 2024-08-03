@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ToyStore.Api.DTOS;
 using ToyStore.Api.Errors;
+using ToyStore.Api.Helpers;
 using ToyStore.Core.IRepository;
 using ToyStore.Core.Models;
+using ToyStore.Infrastructure.Repo;
 
 namespace ToyStore.Api.Controllers
 {
@@ -12,33 +14,44 @@ namespace ToyStore.Api.Controllers
     {
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
-        public CategoryController(IUnitOfWork unitOfWork , IMapper mapper)
+        private readonly IWebHostEnvironment _hostEnvironment;
+        public CategoryController(IUnitOfWork unitOfWork , IMapper mapper, IWebHostEnvironment hostEnvironment)
         {
             _mapper = mapper;
             _uow = unitOfWork;  
+            _hostEnvironment = hostEnvironment;
         }
 
         [HttpGet("getAll")]
         public async Task<ActionResult> GetAll()
         {
-            return Ok(await _uow._categoryRepo.GetCategoriesAsync());
+            var cat = await _uow._categoryRepo.GetCategoriesAsync();
+            return Ok(_mapper.Map<List<CategoryDto>>(cat));
         }
 
         [HttpGet("getCategory/{id}")]
         public async Task<ActionResult> getCategory(int id)
         {
-            return Ok(await _uow._categoryRepo.GetCategoryByIdAsync(id));
+            var cat = await _uow._categoryRepo.GetCategoryByIdAsync(id);
+            return Ok(_mapper.Map<CategoryDto>(cat));
         }
 
         [HttpPost("addCategory")]
         public async Task<ActionResult> addCategory(AddCategoryDto model)
         {
             var category = _mapper.Map<Category>(model);
+            FileHelper fileHelper = new FileHelper(_hostEnvironment);
+            var path = fileHelper.SaveImage(model.Image);
+            if (path.Item1 == 0)
+            {
+                return BadRequest(new ApiResponse(400, "Image Not Saved"));
+            }
+            category.Image = path.Item2;
             await _uow._categoryRepo.AddAsync(category);
             if (!await _uow.saveChangesAsync()) {
                 return BadRequest(new ApiResponse(400));
             }
-            return Created();
+            return Ok(path.Item2);
         }
 
         [HttpPut("updateCategory/{id}")]
@@ -55,7 +68,15 @@ namespace ToyStore.Api.Controllers
             }
             category.Description = model.Description;
             category.Name = model.Name;
-            if(!await _uow.saveChangesAsync())
+            
+            if (model.Image != null && model.Image.Length > 0)
+            {
+                FileHelper fileHelper = new FileHelper(_hostEnvironment);
+                fileHelper.DeleteImage(category.Image);
+                var res = fileHelper.SaveImage(model.Image);
+                category.Image= res.Item2;
+            }
+            if (!await _uow.saveChangesAsync())
             {
                 return BadRequest(new ApiResponse(400));
             }
@@ -70,6 +91,8 @@ namespace ToyStore.Api.Controllers
             {
                 return NotFound(new ApiResponse(404));
             }
+            FileHelper file = new FileHelper(_hostEnvironment);
+            file.DeleteImage(category.Image);
             _uow._categoryRepo.Delete(category);
             if (!await _uow.saveChangesAsync())
             {
