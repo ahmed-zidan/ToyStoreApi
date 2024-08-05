@@ -16,5 +16,7 @@ namespace ToyStore.Core.Models
         [ForeignKey("Category")]
         public int CategotyId { get; set; }
         public Category Category { get; set; }
+        public ICollection<Color> colors { get; set; }
+        public ICollection<Size> Sizes { get; set; }
     }
 }

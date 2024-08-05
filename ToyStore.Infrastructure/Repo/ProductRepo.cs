@@ -29,7 +29,7 @@ namespace ToyStore.Infrastructure.Repo
 
         public async Task<Product> GetProductByIdAsync(int id)
         {
-            return await _context.Products.Include(x=>x.Category).FirstOrDefaultAsync(x => x.Id == id);
+            return await _context.Products.Include(x=>x.Category).Include(x=>x.colors).Include(x=>x.Sizes).FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<Product> GetProductByNameAsync(string Name)

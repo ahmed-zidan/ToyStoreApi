@@ -12,6 +12,8 @@ namespace ToyStore.Core.IRepository
         public ICategoryRepo _categoryRepo { get;}
         public IOrderRepo _orderRepo { get;}
         public IDeliveryMethodRepo _deliveryRepo { get;}
+        public IColorRepo _colorRepo{ get;}
+        public ISizeRepo _sizeRepo { get;}
         Task<bool> saveChangesAsync();
     }
 }

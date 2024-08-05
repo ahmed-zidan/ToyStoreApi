@@ -24,7 +24,7 @@ namespace ToyStore.Api.Helpers
 
                 // Check the allowed extenstions
                 var ext = Path.GetExtension(imageFile.FileName);
-                var allowedExtensions = new string[] { ".jpg", ".png", ".jpeg" };
+                var allowedExtensions = new string[] { ".jpg", ".png", ".jpeg", ".webp" };
                 if (!allowedExtensions.Contains(ext))
                 {
                     string msg = string.Format("Only {0} extensions are allowed", string.Join(",", allowedExtensions));

@@ -14,5 +14,7 @@ namespace ToyStore.Api.DTOS
         [Required]
         public int CategotyId { get; set; }
         public IFormFile Image { get; set; }
+        public List<int> ColorId { get; set; }
+        public List<int> SizeId { get; set; }
     }
 }

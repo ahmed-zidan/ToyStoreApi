@@ -32,6 +32,9 @@ namespace ToyStore.Api.Helpers
             CreateMap<Order, OrderToReturnDto>();
             CreateMap<Category, CategoryDto>()
                 .ForMember(x=>x.Image , y=>y.MapFrom<CategoryImageResolver>());
+
+            CreateMap<Color, ListOFIdAndName>();
+            CreateMap<Size, ListOFIdAndName>();
            
         }
     }

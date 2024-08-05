@@ -24,6 +24,10 @@ namespace ToyStore.Infrastructure.Repo
 
         public IDeliveryMethodRepo _deliveryRepo => new DeliveryMethodRepo(_context);
 
+        public IColorRepo _colorRepo => new ColorRepo(_context);
+
+        public ISizeRepo _sizeRepo => new SizeRepo(_context);
+
         public async Task<bool> saveChangesAsync()
         {
             return await _context.SaveChangesAsync() > 0;

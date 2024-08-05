@@ -46,14 +46,27 @@ namespace ToyStore.Api.Controllers
         public async Task<ActionResult> addProduct(AddProductDto model)
         {
             var product = _mapper.Map<Product>(model);
+            await addColors(product , model.ColorId);
+            await addSizes(product , model.SizeId);   
+            await _unitOfWork._productRepo.AddAsync(product);
             var fileName = await uploadPhoto(model.Image);
             product.PictureUrl = fileName;
-            await _unitOfWork._productRepo.AddAsync(product);
-            if(!await _unitOfWork.saveChangesAsync())
+            if (!await _unitOfWork.saveChangesAsync())
             {
                 return BadRequest(400);
             }
             return Created();
+        }
+
+        private async Task addColors(Product product,List<int>colors)
+        {
+            var col = await _unitOfWork._colorRepo.GetColorsAsync(colors);
+            product.colors = col.ToList();
+        }
+        private async Task addSizes(Product product, List<int> sizes)
+        {
+            var siz = await _unitOfWork._sizeRepo.GetSizesAsync(sizes);
+            product.Sizes = siz.ToList();
         }
 
         [HttpPut("updateProduct")]
@@ -77,6 +90,10 @@ namespace ToyStore.Api.Controllers
             {
                 file.DeleteImage(product.PictureUrl);
                 var res = file.SaveImage(model.Image);
+                if(res.Item1 == 0)
+                {
+                    return BadRequest(new ApiResponse(400, res.Item2));
+                }
                 product.PictureUrl = res.Item2;
             }
 
