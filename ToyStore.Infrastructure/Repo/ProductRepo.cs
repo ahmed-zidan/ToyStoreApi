@@ -1,11 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Abp.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using ToyStore.Core.IRepository;
 using ToyStore.Core.Models;
+using ToyStore.Core.SharedModels;
 using ToyStore.Infrastructure.Data;
 
 namespace ToyStore.Infrastructure.Repo
@@ -37,46 +41,77 @@ namespace ToyStore.Infrastructure.Repo
             return await _context.Products.Include(x=>x.Category).FirstOrDefaultAsync(x => x.Name == Name);
         }
 
-        public async Task<IEnumerable<Product>> GetProductsAsync(int? categoryId, string? search, string? sorting, int startPage = 0, int pageSize = 10)
+        public async Task<IEnumerable<Product>> GetProductsAsync(PaginationDto pagination)
         {
           
             var products = _context.Products.Include(x=>x.Category).AsQueryable();
+            filterByCatgory(ref products, pagination.CategoryId);
+            filterBySearch(ref products, pagination.Search);
+            filterBySizes(ref products, pagination.Sizes);
+            filterByColors(ref products, pagination.Colors);
+            if (pagination.Sorting != null) {
 
-            if (categoryId != null)
-            {
-                products = products.Where(x=>x.CategotyId == categoryId);
-            }
-            if(search != null)
-            {
-                products = products.Where(x => x.Name.ToLower().Contains(search.ToLower()));
-            }
-            if (sorting != null) {
-
-                products = sorting switch
+                products = pagination.Sorting switch
                 {
                     "PriceAsc" => products.OrderBy(x => x.Price),
                     "PriceDesc"=>products.OrderByDescending(x=>x.Price),
                     _=>products.OrderBy(x=>x.Name)
                 };
             }
-
-            return await products.Skip(startPage * pageSize).Take(pageSize).ToListAsync();
+            return await products.Skip(pagination.PageIdx * pagination.PageSize).Take(pagination.PageSize).ToListAsync();
         }
 
-        public async Task<int> productCout(int? categoryId , string?search)
+        public async Task<int> productCount(PaginationDto pagination)
         {
             var products = _context.Products.AsQueryable();
+            filterByCatgory(ref products, pagination.CategoryId);
+            filterBySearch(ref products, pagination.Search);
+            filterBySizes(ref products, pagination.Sizes);
+            filterByColors(ref products, pagination.Colors);
+            
+            return await products.CountAsync();
+        }
+
+        private void filterByCatgory(ref IQueryable<Product> products , int? categoryId)
+        {
             if (categoryId != null)
             {
-              products = products.Where(x=>x.CategotyId==categoryId);
+                products = products.Where(x => x.CategotyId == categoryId);
             }
-           
-            if(search != null)
-            {
-                products = products.Where(x => x.Name.ToLower().Contains(search.ToLower()));
-            }
+            
+        }
 
-            return await products.CountAsync();
+        private void filterBySearch(ref IQueryable<Product> products, string? Search)
+        {
+            if (Search != null)
+            {
+                products = products.Where(x => x.Name.ToLower().Contains(Search.ToLower()));
+            }
+        }
+
+        private void filterBySizes(ref IQueryable<Product> products, List<int>? Sizes)
+        {
+            if (Sizes != null && Sizes.Count > 0)
+            {
+                Expression<Func<Product, bool>> predicate = PredicateBuilder.False<Product>();
+                foreach (var item in Sizes)
+                {
+                    predicate = predicate.Or(x => x.Sizes.Any(y => y.Id == item));
+                }
+                products = products.Where(predicate);
+            }
+        }
+        private void filterByColors(ref IQueryable<Product> products, List<int>? Colors)
+        {
+            if (Colors != null && Colors.Count > 0)
+            {
+                Expression<Func<Product, bool>> predicate = PredicateBuilder.False<Product>();
+                foreach (var item in Colors)
+                {
+                    predicate = predicate.Or(x => x.colors.Any(y => y.Id == item));
+                }
+                products = products.Where(predicate);
+            }
         }
 
         public void Update(Product model)

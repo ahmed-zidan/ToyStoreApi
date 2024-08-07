@@ -8,6 +8,7 @@ using ToyStore.Api.Errors;
 using ToyStore.Api.Helpers;
 using ToyStore.Core.IRepository;
 using ToyStore.Core.Models;
+using ToyStore.Core.SharedModels;
 using ToyStore.Infrastructure.Repo;
 
 namespace ToyStore.Api.Controllers
@@ -32,13 +33,14 @@ namespace ToyStore.Api.Controllers
             return Ok(prDto);
         }
 
-        [HttpGet("getAllProducts")]
-        public async Task<ActionResult> getProductsByCategory(int categoryId , string?search , string ?sorting, int pageIdx = 0,int pageSize = 10)
+        [HttpPost("getAllProducts")]
+        public async Task<ActionResult> getProductsByCategory(PaginationDto pagination)
         {
-            var pr = await _unitOfWork._productRepo.GetProductsAsync(categoryId == 0?null:categoryId,search, sorting , pageIdx,pageSize);
-            int totalCount = await _unitOfWork._productRepo.productCout(categoryId,search);
+            var pr = await _unitOfWork._productRepo.GetProductsAsync(pagination);
+            int totalCount = await _unitOfWork._productRepo.productCount(pagination);
             var prDto = _mapper.Map<List<ProductDto>>(pr);
-            return Ok(new ProductPaginationDto() { PageCount= (int)Math.Ceiling(totalCount*1.0/pageSize), PageNumber=pageIdx,PageSize=prDto.Count(),
+            return Ok(new ProductPaginationDto() { PageCount= (int)Math.Ceiling(totalCount*1.0/ pagination.PageSize), PageNumber= pagination.PageIdx,
+                PageSize=prDto.Count(),
             Products = prDto});
         }
 
