@@ -46,6 +46,7 @@ namespace ToyStore.Infrastructure.Repo
           
             var products = _context.Products.Include(x=>x.Category).AsQueryable();
             filterByCatgory(ref products, pagination.CategoryId);
+            filterByPrice(ref products, pagination.MinPrice,pagination.MaxPrice);
             filterBySearch(ref products, pagination.Search);
             filterBySizes(ref products, pagination.Sizes);
             filterByColors(ref products, pagination.Colors);
@@ -53,18 +54,24 @@ namespace ToyStore.Infrastructure.Repo
 
                 products = pagination.Sorting switch
                 {
-                    "PriceAsc" => products.OrderBy(x => x.Price),
-                    "PriceDesc"=>products.OrderByDescending(x=>x.Price),
+                    "PriceAsc" => products.OrderBy(x => x.SellPrice),
+                    "PriceDesc"=>products.OrderByDescending(x=>x.SellPrice),
                     _=>products.OrderBy(x=>x.Name)
                 };
             }
             return await products.Skip(pagination.PageIdx * pagination.PageSize).Take(pagination.PageSize).ToListAsync();
         }
 
+        private void filterByPrice(ref IQueryable<Product> products, int minPrice, int maxPrice)
+        {
+            products = products.Where(x => x.SellPrice >= minPrice && x.SellPrice <= maxPrice);
+        }
+
         public async Task<int> productCount(PaginationDto pagination)
         {
             var products = _context.Products.AsQueryable();
             filterByCatgory(ref products, pagination.CategoryId);
+            filterByPrice(ref products, pagination.MinPrice, pagination.MaxPrice);
             filterBySearch(ref products, pagination.Search);
             filterBySizes(ref products, pagination.Sizes);
             filterByColors(ref products, pagination.Colors);

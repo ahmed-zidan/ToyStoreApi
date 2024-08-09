@@ -81,10 +81,10 @@ namespace ToyStore.Api.Controllers
             if (product.Id != model.Id) {
                 return BadRequest(new ApiResponse(400));
             }
-            product.Price = model.Price;
+            product.SellPrice = model.SellPrice;
+            product.MainPrice = model.MainPrice;
             product.Description = model.Description;
             product.CategotyId = model.CategotyId;
-            product.Price = product.Price;
             product.Name = model.Name;
 
             FileHelper file = new FileHelper(_env);

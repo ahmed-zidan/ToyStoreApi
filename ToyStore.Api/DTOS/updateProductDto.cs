@@ -12,7 +12,11 @@ namespace ToyStore.Api.DTOS
         [Required]
         public string Description { get; set; }
         [Required]
-        public decimal Price { get; set; }
+        public decimal MainPrice { get; set; }
+        [Required]
+        public decimal SellPrice { get; set; }
+        public bool IsSale { get; set; }
+        public bool IsNew { get; set; }
         [Required]
         public int CategotyId { get; set; }
         public IFormFile? Image { get; set; }
