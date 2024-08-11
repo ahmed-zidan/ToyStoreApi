@@ -16,5 +16,7 @@ namespace ToyStore.Api.DTOS
         public int CategotyId { get; set; }
         public string CategoryName { get; set; }
         public string ImageUrl { get; set; }
+        public List<ColorDto> Colors { get; set; }
+        public List<ListOFIdAndName> Sizes { get; set; }
     }
 }
