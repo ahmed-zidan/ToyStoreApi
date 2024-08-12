@@ -9,6 +9,7 @@ using System.Security.Claims;
 using ToyStore.Api.DTOS;
 using ToyStore.Api.Errors;
 using ToyStore.Api.Extensions;
+using ToyStore.Api.Helpers;
 using ToyStore.Core.Models;
 using ToyStore.Core.Repository;
 
@@ -22,14 +23,16 @@ namespace ToyStore.Api.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IMapper _mapper;
         private readonly IJWTService _jwtService;
+        IWebHostEnvironment _environment;
         public AccountController(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, IMapper mapper,
-            IJWTService jwtService, SignInManager<AppUser> signInManager)
+            IJWTService jwtService, SignInManager<AppUser> signInManager, IWebHostEnvironment environment)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _mapper = mapper;
             _jwtService = jwtService;
             _signInManager = signInManager;
+            _environment = environment;
         }
 
         [HttpGet("getAllUsers")]
@@ -40,7 +43,7 @@ namespace ToyStore.Api.Controllers
         }
 
         [HttpGet("getUser/{id}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> getUser(string id)
         {
             var user = await _userManager.Users.Where(x => x.Id == id).FirstOrDefaultAsync();
@@ -49,6 +52,42 @@ namespace ToyStore.Api.Controllers
             }
             return Ok(user);
         }
+
+        [HttpDelete("deleteUser/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> deleteUser(string id)
+        {
+            var user = await _userManager.Users.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                return NotFound(new ApiResponse(404));
+            }
+            await _userManager.DeleteAsync(user);
+            return NoContent();
+        }
+
+        [HttpPost("updateUser/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> updateUser(string id, UserDto userDto)
+        {
+            var user = await _userManager.Users.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (user == null ||  user.Id != userDto.Id) {
+                return BadRequest(new ApiResponse(400));
+            }
+            
+            user.PhoneNumber = userDto.PhoneNumber;
+            user.DisplayName = userDto.DisplayName;
+            user.Role = userDto.Role;
+
+            FileHelper fileHelper = new FileHelper(_environment);
+            if (userDto.Photo != null && userDto.Photo.Length > 0) { 
+                var res = fileHelper.SaveImage(userDto.Photo);
+                user.Photo = res.Item2;
+                await _userManager.UpdateAsync(user);
+            }
+            return Ok();
+        }
+
 
         [HttpPost("login")]
         public async Task<IActionResult> login(LoginDto model)

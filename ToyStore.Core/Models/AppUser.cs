@@ -12,5 +12,6 @@ namespace ToyStore.Core.Models
         public string DisplayName { get; set; }
         public Address Address { get; set; }
         public string Role { get; set; }
+        public string Photo { get; set; }
     }
 }
