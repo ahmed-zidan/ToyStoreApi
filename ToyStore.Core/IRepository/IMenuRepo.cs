@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using ToyStore.Core.Models;
+
+namespace ToyStore.Core.IRepository
+{
+    public interface IMenuRepo
+    {
+        Task addMenu(Menu menu);
+        void deleteMenu(Menu menu);
+        Task updateMenuAccessMenus(List<MenuAccess> menus);
+        Task<List<MenuAccess>> getAllMenus(string roleId);
+        Task<List<Menu>> getAllMenus();
+        Task<bool> isMenuExistAsync(string name);
+        Task<Menu> getMenu(int Id);
+    }
+}

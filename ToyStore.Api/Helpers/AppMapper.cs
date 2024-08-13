@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using ToyStore.Api.DTOS;
 using ToyStore.Core.Models;
 using ToyStore.Core.Models.Orders;
@@ -35,6 +36,9 @@ namespace ToyStore.Api.Helpers
 
             CreateMap<Color, ListOFIdAndName>();
             CreateMap<Size, ListOFIdAndName>();
+            CreateMap<IdentityRole, IdentityRoleDto>();
+            CreateMap<Menu, MenuDto>();
+            CreateMap<MenuAccess, MenuAccessDto>();
            
         }
     }

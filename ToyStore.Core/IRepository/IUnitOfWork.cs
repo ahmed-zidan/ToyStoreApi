@@ -8,6 +8,7 @@ namespace ToyStore.Core.IRepository
 {
     public interface IUnitOfWork
     {
+        public IMenuRepo _menuRepo{ get;}
         public IProductRepo _productRepo { get;}
         public ICategoryRepo _categoryRepo { get;}
         public IOrderRepo _orderRepo { get;}

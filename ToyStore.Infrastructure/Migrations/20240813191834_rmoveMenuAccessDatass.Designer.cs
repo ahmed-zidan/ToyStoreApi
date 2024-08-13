@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ToyStore.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using ToyStore.Infrastructure.Data;
 namespace ToyStore.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240813191834_rmoveMenuAccessDatass")]
+    partial class rmoveMenuAccessDatass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -435,42 +438,6 @@ namespace ToyStore.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ToyStore.Core.Models.MenuAccess", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("HaveAdd")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("HaveDelete")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("HaveEdit")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("HaveView")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("MenuId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MenuId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("MenuAccesses");
-                });
-
             modelBuilder.Entity("ToyStore.Core.Models.Orders.DeliveryMethod", b =>
                 {
                     b.Property<int>("Id")
@@ -782,25 +749,6 @@ namespace ToyStore.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("AppUser");
-                });
-
-            modelBuilder.Entity("ToyStore.Core.Models.MenuAccess", b =>
-                {
-                    b.HasOne("ToyStore.Core.Models.Menu", "Menu")
-                        .WithMany()
-                        .HasForeignKey("MenuId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Menu");
-
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("ToyStore.Core.Models.Orders.Order", b =>

@@ -28,6 +28,8 @@ namespace ToyStore.Infrastructure.Repo
 
         public ISizeRepo _sizeRepo => new SizeRepo(_context);
 
+        public IMenuRepo _menuRepo => new MenuRepo(_context);
+
         public async Task<bool> saveChangesAsync()
         {
             return await _context.SaveChangesAsync() > 0;
