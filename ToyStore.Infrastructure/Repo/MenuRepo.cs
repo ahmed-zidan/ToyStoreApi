@@ -27,9 +27,17 @@ namespace ToyStore.Infrastructure.Repo
             _context.Menus.Remove(menu);
         }
 
-        public async Task<List<MenuAccess>> getAllMenus(string roleId)
+        public async Task<List<Menu>> getAllMenus(string roleName)
         {
-            return await _context.MenuAccesses.Include(x => x.Menu).Where(x => x.Role.Id == roleId).ToListAsync();
+            if(roleName.ToUpper() == "ADMIN")
+            {
+                return await _context.Menus.Where(x=>x.Status==true).ToListAsync();
+            }
+            else
+            {
+                return await _context.Menus.Where(x =>x.Status == true && x.menuAccesses.Any(c => c.HaveView == true && c.Role.Name == roleName)).ToListAsync();
+            }
+            //return await _context.MenuAccesses.Include(x => x.Menu).Where(x => x.Role.NormalizedName == roleName.ToUpper()).ToListAsync();
         }
 
         public async Task<List<Menu>> getAllMenus()
@@ -40,6 +48,11 @@ namespace ToyStore.Infrastructure.Repo
         public async Task<Menu> getMenu(int Id)
         {
             return await _context.Menus.FirstOrDefaultAsync(x => x.Id == Id);
+        }
+
+        public async Task<MenuAccess> getMenuAccess(string roleName, int menuId)
+        {
+            return await _context.MenuAccesses.FirstOrDefaultAsync(x => x.Role.Name == roleName && x.MenuId == menuId);
         }
 
         public async Task<bool> isMenuExistAsync(string name)
@@ -63,5 +76,7 @@ namespace ToyStore.Infrastructure.Repo
                 }
             }
         }
+
+       
     }
 }

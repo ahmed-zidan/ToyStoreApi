@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ToyStore.Api.DTOS;
 using ToyStore.Api.Errors;
+using ToyStore.Api.Extensions;
 using ToyStore.Core.IRepository;
+using ToyStore.Core.Models;
 
 namespace ToyStore.Api.Controllers
 {
@@ -18,22 +20,33 @@ namespace ToyStore.Api.Controllers
             _uow = unitOfWork;
         }
 
-        [HttpGet("getMenusByRole/{roleId}")]
+        [HttpGet("getMenusByRole")]
         [Authorize]
-        public async Task<IActionResult> getMenusByRole(string roleId) { 
-            var MenuAccess = await _uow._menuRepo.getAllMenus(roleId);
-            var MenuAccessDto = _mapper.Map<List<MenuAccessDto>>(MenuAccess);
+        public async Task<IActionResult> getMenusByRole() {
+            string roleName = HttpContext.getCurrentUserRole();
+            var menus = await _uow._menuRepo.getAllMenus(roleName);
+            var MenusDto = _mapper.Map<List<MenuDto>>(menus);
+            return Ok(MenusDto);
+        }
+
+        [HttpGet("getMenuAccess/{menuId}")]
+        [Authorize]
+        public async Task<IActionResult> getMenuAccess(int menuId)
+        {
+            string roleName = HttpContext.getCurrentUserRole();
+            var menus = await _uow._menuRepo.getMenuAccess(roleName,menuId);
+            var MenuAccessDto = _mapper.Map<MenuAccessDto>(menus);
             return Ok(MenuAccessDto);
         }
 
-        [HttpGet("getMenus")]
-        [Authorize]
+        /*[HttpGet("getMenus")]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> getMenus()
         {
             var Menus = await _uow._menuRepo.getAllMenus();
             var MenusDto = _mapper.Map<List<MenuDto>>(Menus);
             return Ok(MenusDto);
-        }
+        }*/
 
         [HttpPost("addMenu")]
         [Authorize]

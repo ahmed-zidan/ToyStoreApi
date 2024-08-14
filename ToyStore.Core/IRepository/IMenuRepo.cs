@@ -12,8 +12,9 @@ namespace ToyStore.Core.IRepository
         Task addMenu(Menu menu);
         void deleteMenu(Menu menu);
         Task updateMenuAccessMenus(List<MenuAccess> menus);
-        Task<List<MenuAccess>> getAllMenus(string roleId);
+        Task<List<Menu>> getAllMenus(string roleName);
         Task<List<Menu>> getAllMenus();
+        Task<MenuAccess> getMenuAccess(string roleName ,int menuId);
         Task<bool> isMenuExistAsync(string name);
         Task<Menu> getMenu(int Id);
     }

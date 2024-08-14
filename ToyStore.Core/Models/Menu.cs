@@ -9,6 +9,8 @@ namespace ToyStore.Core.Models
     public class Menu:BaseEntity
     {
         public string Name { get; set; }
+        public string UserName { get; set; }
         public bool Status { get; set; }
+        public ICollection<MenuAccess> menuAccesses { get; set; }
     }
 }

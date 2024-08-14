@@ -14,12 +14,12 @@ namespace ToyStore.Infrastructure.Data.Config
         public void Configure(EntityTypeBuilder<Menu> builder)
         {
             builder.HasData(
-                new Menu() { Id = 1, Name = "Home", Status = true },
-                new Menu() { Id = 2, Name = "Product", Status = true },
-                new Menu() { Id = 3, Name = "Category", Status = true },
-                new Menu() { Id = 4, Name = "User Manager", Status = true },
-                new Menu() { Id = 5, Name = "Role Manager", Status = true },
-                new Menu() { Id = 6, Name = "Menu Manager", Status = true }
+                new Menu() { Id = 1, Name = "Home",UserName= "Home", Status = true },
+                new Menu() { Id = 2, Name = "Product", UserName = "Product", Status = true },
+                new Menu() { Id = 3, Name = "Category", UserName = "Category", Status = true },
+                new Menu() { Id = 4, Name = "User Manager", UserName = "UserManager", Status = true },
+                new Menu() { Id = 5, Name = "Role Manager", UserName = "RoleManager", Status = true },
+                new Menu() { Id = 6, Name = "Menu Manager", UserName = "MenuManager", Status = true }
                 );
 
         }

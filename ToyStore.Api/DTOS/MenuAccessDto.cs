@@ -7,10 +7,7 @@ namespace ToyStore.Api.DTOS
     public class MenuAccessDto
     {
         public int Id { get; set; }
-        public string RoleId { get; set; }
-        public IdentityRoleDto Role { get; set; }
         public int MenuId { get; set; }
-        public MenuDto Menu { get; set; }
         public bool HaveView { get; set; }
         public bool HaveAdd { get; set; }
         public bool HaveEdit { get; set; }

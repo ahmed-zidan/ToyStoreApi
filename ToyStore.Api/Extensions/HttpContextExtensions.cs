@@ -13,5 +13,9 @@ namespace ToyStore.Api.Extensions
         {
             return context.User.Claims.Where(x => x.Type == ClaimTypes.Email).FirstOrDefault()?.Value ?? " ";
         }
+        public static string getCurrentUserRole(this HttpContext context)
+        {
+            return context.User.Claims.Where(x => x.Type == ClaimTypes.Role).FirstOrDefault()?.Value ?? " ";
+        }
     }
 }
