@@ -41,7 +41,7 @@ namespace ToyStore.Api.Controllers
         }
 
         [HttpPost("addCategory")]
-        public async Task<ActionResult> addCategory(AddCategoryDto model)
+        public async Task<ActionResult> addCategory([FromForm] AddCategoryDto model)
         {
             var category = _mapper.Map<Category>(model);
             FileHelper fileHelper = new FileHelper(_hostEnvironment);
@@ -55,7 +55,7 @@ namespace ToyStore.Api.Controllers
             if (!await _uow.saveChangesAsync()) {
                 return BadRequest(new ApiResponse(400));
             }
-            return Ok(path.Item2);
+            return Ok();
         }
 
         [HttpPut("updateCategory/{id}")]
@@ -73,6 +73,7 @@ namespace ToyStore.Api.Controllers
             category.Description = model.Description;
             category.Name = model.Name;
             
+            
             if (model.Image != null && model.Image.Length > 0)
             {
                 FileHelper fileHelper = new FileHelper(_hostEnvironment);
@@ -80,10 +81,11 @@ namespace ToyStore.Api.Controllers
                 var res = fileHelper.SaveImage(model.Image);
                 category.Image= res.Item2;
             }
-            if (!await _uow.saveChangesAsync())
-            {
+            await _uow.saveChangesAsync();
+            /*{
+                
                 return BadRequest(new ApiResponse(400));
-            }
+            }*/
             return Ok();
         }
 
@@ -102,7 +104,7 @@ namespace ToyStore.Api.Controllers
             {
                 return BadRequest(new ApiResponse(400));
             }
-            return Created();
+            return NoContent();
         }
     }
 
