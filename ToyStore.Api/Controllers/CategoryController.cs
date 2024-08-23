@@ -11,7 +11,8 @@ using ToyStore.Infrastructure.Repo;
 
 namespace ToyStore.Api.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="Admin")]
+    
     public class CategoryController : BaseController
     {
         private readonly IUnitOfWork _uow;

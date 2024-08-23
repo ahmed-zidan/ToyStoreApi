@@ -9,7 +9,7 @@ using ToyStore.Core.Models;
 
 namespace ToyStore.Api.Controllers
 {
-   
+    [Authorize]
     public class MenuController : BaseController
     {
         private readonly IUnitOfWork _uow;
@@ -21,7 +21,7 @@ namespace ToyStore.Api.Controllers
         }
 
         [HttpGet("getMenusByRole")]
-        [Authorize]
+        
         public async Task<IActionResult> getMenusByRole() {
             string roleName = HttpContext.getCurrentUserRole();
             var menus = await _uow._menuRepo.getAllMenus(roleName);
@@ -29,12 +29,22 @@ namespace ToyStore.Api.Controllers
             return Ok(MenusDto);
         }
 
-        [HttpGet("getMenuAccess/{menuId}")]
-        [Authorize]
-        public async Task<IActionResult> getMenuAccess(int menuId)
+        [HttpGet("getMenuAccess/{menuName}")]
+        
+        public async Task<IActionResult> getMenuAccess(string menuName)
         {
+           
             string roleName = HttpContext.getCurrentUserRole();
-            var menus = await _uow._menuRepo.getMenuAccess(roleName,menuId);
+            if (roleName == "Admin") {
+                return Ok(new MenuAccess()
+                {
+                    HaveAdd = true,
+                    HaveEdit = true,
+                    HaveView = true,
+                    HaveDelete = true,
+                });
+            }
+            var menus = await _uow._menuRepo.getMenuAccess(roleName, menuName);
             var MenuAccessDto = _mapper.Map<MenuAccessDto>(menus);
             return Ok(MenuAccessDto);
         }
@@ -49,7 +59,7 @@ namespace ToyStore.Api.Controllers
         }*/
 
         [HttpPost("addMenu")]
-        [Authorize]
+        
         public async Task<IActionResult> addMenu(string name)
         {
             if(await _uow._menuRepo.isMenuExistAsync(name))
@@ -63,7 +73,7 @@ namespace ToyStore.Api.Controllers
         }
 
         [HttpPost("updateMenu")]
-        [Authorize]
+        
         public async Task<IActionResult> updateMenu(MenuDto menu)
         {
             var res = await _uow._menuRepo.getMenu(menu.Id);
@@ -86,7 +96,7 @@ namespace ToyStore.Api.Controllers
         }
 
         [HttpDelete("deleteMenu/{id}")]
-        [Authorize]
+        
         public async Task<IActionResult> deleteMenu(int id)
         {
             var res = await _uow._menuRepo.getMenu(id);

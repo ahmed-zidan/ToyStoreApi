@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -13,6 +14,7 @@ using ToyStore.Core.SharedModels;
 
 namespace ToyStore.Api.Controllers
 {
+    [Authorize(Roles ="Admin")]
     public class ProductController : BaseController
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -25,6 +27,7 @@ namespace ToyStore.Api.Controllers
             _env = env;
         }
 
+        [AllowAnonymous]
         [HttpGet("getProduct/{id}")]
         public async Task<ActionResult> getProduct(int id)
         {
@@ -33,6 +36,7 @@ namespace ToyStore.Api.Controllers
             return Ok(prDto);
         }
 
+        [AllowAnonymous]
         [HttpPost("getAllProducts")]
         public async Task<ActionResult> getProductsByCategory(PaginationDto pagination)
         {

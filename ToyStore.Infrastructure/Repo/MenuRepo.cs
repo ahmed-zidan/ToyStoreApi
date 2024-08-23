@@ -50,9 +50,9 @@ namespace ToyStore.Infrastructure.Repo
             return await _context.Menus.FirstOrDefaultAsync(x => x.Id == Id);
         }
 
-        public async Task<MenuAccess> getMenuAccess(string roleName, int menuId)
+        public async Task<MenuAccess> getMenuAccess(string roleName, string menuName)
         {
-            return await _context.MenuAccesses.FirstOrDefaultAsync(x => x.Role.Name == roleName && x.MenuId == menuId);
+            return await _context.MenuAccesses.FirstOrDefaultAsync(x => x.Role.Name == roleName && x.Menu.Name == menuName);
         }
 
         public async Task<bool> isMenuExistAsync(string name)

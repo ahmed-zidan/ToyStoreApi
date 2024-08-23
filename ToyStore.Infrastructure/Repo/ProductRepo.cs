@@ -50,7 +50,7 @@ namespace ToyStore.Infrastructure.Repo
             filterBySearch(ref products, pagination.Search);
             filterBySizes(ref products, pagination.Sizes);
             filterByColors(ref products, pagination.Colors);
-            if (pagination.Sorting != null) {
+           if (pagination.Sorting != null) {
 
                 products = pagination.Sorting switch
                 {
