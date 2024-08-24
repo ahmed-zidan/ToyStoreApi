@@ -33,6 +33,14 @@ namespace ToyStore.Api.Controllers
             return Ok(_mapper.Map<List<CategoryDto>>(cat));
         }
 
+        [HttpGet("getCategoriesNamesAndId")]
+        [AllowAnonymous]
+        public async Task<ActionResult> getCategoriesNamesAndId()
+        {
+            var cat = await _uow._categoryRepo.GetCategoriesNameAndId();
+            return Ok(cat);
+        }
+
         [HttpGet("getCategory/{id}")]
         [AllowAnonymous]
         public async Task<ActionResult> getCategory(int id)

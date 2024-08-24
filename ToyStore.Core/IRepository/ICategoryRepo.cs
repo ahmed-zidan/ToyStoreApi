@@ -13,6 +13,7 @@ namespace ToyStore.Core.IRepository
         Task<IEnumerable<Category>> GetCategoriesAsync();
         Task<Category> GetCategoryByIdAsync(int id);
         Task<Category> GetCategoryByNameAsync(string Name);
+        Task<IEnumerable<Object>> GetCategoriesNameAndId();
         void Update(Category model);
         void Delete(Category category);
         

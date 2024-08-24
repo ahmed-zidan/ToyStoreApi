@@ -32,6 +32,11 @@ namespace ToyStore.Infrastructure.Repo
             return await _context.Categories.ToListAsync();
         }
 
+        public async Task<IEnumerable<Object>> GetCategoriesNameAndId()
+        {
+            return await _context.Categories.Select(x => new { Name = x.Name, Id = x.Id }).ToListAsync();
+        }
+
         public async Task<Category> GetCategoryByIdAsync(int id)
         {
             return await _context.Categories.FirstOrDefaultAsync(x=>x.Id == id);
