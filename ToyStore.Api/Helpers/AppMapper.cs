@@ -35,6 +35,7 @@ namespace ToyStore.Api.Helpers
                 .ForMember(x=>x.Image , y=>y.MapFrom<CategoryImageResolver>());
 
             CreateMap<Color, ListOFIdAndName>();
+            CreateMap<Color, ColorDto>();
             CreateMap<Size, ListOFIdAndName>();
             CreateMap<IdentityRole, IdentityRoleDto>();
             CreateMap<Menu, MenuDto>();

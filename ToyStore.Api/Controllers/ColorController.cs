@@ -24,7 +24,7 @@ namespace ToyStore.Api.Controllers
         public async Task<IActionResult> get()
         {
             var colors = await _uow._colorRepo.GetColorsAsync();
-            return Ok(_mapper.Map <List<ListOFIdAndName>>(colors));
+            return Ok(_mapper.Map <List<ColorDto>>(colors));
         }
 
         [HttpPost("Add")]

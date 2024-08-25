@@ -121,6 +121,7 @@ namespace ToyStore.Api.Controllers
             }
 
             var userModel = _mapper.Map<AppUser>(model);
+            userModel.UserName = model.DisplayName+Guid.NewGuid();
             var res = await _userManager.CreateAsync(userModel, model.Password);
             if (res.Succeeded) {
                 await _userManager.AddToRoleAsync(userModel, "User");
