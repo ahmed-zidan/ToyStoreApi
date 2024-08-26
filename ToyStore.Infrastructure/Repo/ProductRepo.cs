@@ -59,7 +59,7 @@ namespace ToyStore.Infrastructure.Repo
                     _=>products.OrderBy(x=>x.Name)
                 };
             }
-            return await products.Skip(pagination.PageIdx * pagination.PageSize).Take(pagination.PageSize).ToListAsync();
+            return await products.Skip(pagination.PageIdx * pagination.PageSize).Take(pagination.PageSize).Include(x=>x.Sizes).Include(x=>x.colors).ToListAsync();
         }
 
         private void filterByPrice(ref IQueryable<Product> products, int minPrice, int maxPrice)

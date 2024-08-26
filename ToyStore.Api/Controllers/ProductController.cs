@@ -75,7 +75,7 @@ namespace ToyStore.Api.Controllers
             product.Sizes = siz.ToList();
         }
 
-        [HttpPut("updateProduct")]
+        [HttpPut("updateProduct/{productId}")]
         public async Task<ActionResult> updateProduct(int productId,updateProductDto model)
         {
             var product = await _unitOfWork._productRepo.GetProductByIdAsync(productId);
