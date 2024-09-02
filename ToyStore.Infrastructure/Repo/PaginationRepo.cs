@@ -24,9 +24,10 @@ namespace ToyStore.Infrastructure.Repo
             var param = Expression.Parameter(typeof(T), "x");
             var dbSet = _context.Set<T>();
             var query = dbSet.AsQueryable();
-            doSorting(ref query,param, pagination.Sortings);
+            
             doFilterNumbers(ref query, param, pagination.FilterNums);
             doFilterStrings(ref query, param, pagination.FilterStrings);
+            doSorting(ref query, param, pagination.Sortings);
             return await query.Skip(pagination.PageIdx * pagination.PageSize).Take(pagination.PageSize)
             .ToListAsync();
         }
