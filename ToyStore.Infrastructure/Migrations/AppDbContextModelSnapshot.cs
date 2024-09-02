@@ -34,7 +34,7 @@ namespace ToyStore.Infrastructure.Migrations
 
                     b.HasIndex("colorsId");
 
-                    b.ToTable("ColorProduct");
+                    b.ToTable("ColorProduct", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -182,7 +182,7 @@ namespace ToyStore.Infrastructure.Migrations
 
                     b.HasIndex("SizesId");
 
-                    b.ToTable("ProductSize");
+                    b.ToTable("ProductSize", (string)null);
                 });
 
             modelBuilder.Entity("ToyStore.Core.Models.Address", b =>
@@ -226,7 +226,7 @@ namespace ToyStore.Infrastructure.Migrations
                     b.HasIndex("AppUserId")
                         .IsUnique();
 
-                    b.ToTable("Address");
+                    b.ToTable("Address", (string)null);
                 });
 
             modelBuilder.Entity("ToyStore.Core.Models.AppUser", b =>
@@ -329,7 +329,7 @@ namespace ToyStore.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
 
                     b.HasData(
                         new
@@ -373,7 +373,7 @@ namespace ToyStore.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Colors");
+                    b.ToTable("Colors", (string)null);
                 });
 
             modelBuilder.Entity("ToyStore.Core.Models.Menu", b =>
@@ -397,7 +397,7 @@ namespace ToyStore.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Menus");
+                    b.ToTable("Menus", (string)null);
 
                     b.HasData(
                         new
@@ -477,7 +477,7 @@ namespace ToyStore.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("MenuAccesses");
+                    b.ToTable("MenuAccesses", (string)null);
                 });
 
             modelBuilder.Entity("ToyStore.Core.Models.Orders.DeliveryMethod", b =>
@@ -505,7 +505,7 @@ namespace ToyStore.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DeliveryMethods");
+                    b.ToTable("DeliveryMethods", (string)null);
 
                     b.HasData(
                         new
@@ -575,7 +575,7 @@ namespace ToyStore.Infrastructure.Migrations
 
                     b.HasIndex("DeliveryMethodId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("ToyStore.Core.Models.Orders.OrderItem", b =>
@@ -599,7 +599,7 @@ namespace ToyStore.Infrastructure.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("ToyStore.Core.Models.Product", b =>
@@ -643,7 +643,7 @@ namespace ToyStore.Infrastructure.Migrations
 
                     b.HasIndex("CategotyId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
 
                     b.HasData(
                         new
@@ -698,7 +698,7 @@ namespace ToyStore.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Sizes");
+                    b.ToTable("Sizes", (string)null);
                 });
 
             modelBuilder.Entity("ColorProduct", b =>
@@ -820,7 +820,7 @@ namespace ToyStore.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("ToyStore.Core.Models.Orders.ShipAddress", "ShipToAddress", b1 =>
+                    b.OwnsOne("ToyStore.Core.Models.Orders.Order.ShipToAddress#ToyStore.Core.Models.Orders.ShipAddress", "ShipToAddress", b1 =>
                         {
                             b1.Property<int>("OrderId")
                                 .HasColumnType("int");
@@ -851,7 +851,7 @@ namespace ToyStore.Infrastructure.Migrations
 
                             b1.HasKey("OrderId");
 
-                            b1.ToTable("Orders");
+                            b1.ToTable("Orders", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("OrderId");
@@ -870,7 +870,7 @@ namespace ToyStore.Infrastructure.Migrations
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.OwnsOne("ToyStore.Core.Models.Orders.ProductItemOrder", "ProductItemOrder", b1 =>
+                    b.OwnsOne("ToyStore.Core.Models.Orders.OrderItem.ProductItemOrder#ToyStore.Core.Models.Orders.ProductItemOrder", "ProductItemOrder", b1 =>
                         {
                             b1.Property<int>("OrderItemId")
                                 .HasColumnType("int");
@@ -888,7 +888,7 @@ namespace ToyStore.Infrastructure.Migrations
 
                             b1.HasKey("OrderItemId");
 
-                            b1.ToTable("OrderItems");
+                            b1.ToTable("OrderItems", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("OrderItemId");

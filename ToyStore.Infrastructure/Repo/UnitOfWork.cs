@@ -30,6 +30,8 @@ namespace ToyStore.Infrastructure.Repo
 
         public IMenuRepo _menuRepo => new MenuRepo(_context);
 
+        public IPaginationRepo _paginationRepo => new PaginationRepo(_context);
+
         public async Task<bool> saveChangesAsync()
         {
             return await _context.SaveChangesAsync() > 0;

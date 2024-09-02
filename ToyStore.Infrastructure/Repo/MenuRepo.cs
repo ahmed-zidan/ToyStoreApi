@@ -1,11 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using ToyStore.Core.IRepository;
 using ToyStore.Core.Models;
+using ToyStore.Core.SharedModels;
 using ToyStore.Infrastructure.Data;
 
 namespace ToyStore.Infrastructure.Repo
@@ -55,6 +59,8 @@ namespace ToyStore.Infrastructure.Repo
             return await _context.MenuAccesses.FirstOrDefaultAsync(x => x.Role.Name == roleName && x.Menu.Name == menuName);
         }
 
+
+       
         public async Task<bool> isMenuExistAsync(string name)
         {
             return await _context.Menus.AnyAsync(x=>x.Name.ToLower() == name.ToLower());

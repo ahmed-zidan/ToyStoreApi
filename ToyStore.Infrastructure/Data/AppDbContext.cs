@@ -33,6 +33,7 @@ namespace ToyStore.Infrastructure.Data
         public DbSet<Color> Colors { get; set; }
         public DbSet<Size> Sizes { get; set; }
         public DbSet<Menu> Menus { get; set; }
+        public DbSet<Test> Test { get; set; }
         public DbSet<MenuAccess> MenuAccesses { get; set; }
     }
 }

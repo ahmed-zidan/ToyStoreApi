@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ToyStore.Core.Models;
+using ToyStore.Core.SharedModels;
 
 namespace ToyStore.Core.IRepository
 {
@@ -17,5 +18,6 @@ namespace ToyStore.Core.IRepository
         Task<MenuAccess> getMenuAccess(string roleName ,string menuName);
         Task<bool> isMenuExistAsync(string name);
         Task<Menu> getMenu(int Id);
+       
     }
 }

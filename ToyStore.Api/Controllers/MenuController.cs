@@ -6,6 +6,7 @@ using ToyStore.Api.Errors;
 using ToyStore.Api.Extensions;
 using ToyStore.Core.IRepository;
 using ToyStore.Core.Models;
+using ToyStore.Core.SharedModels;
 
 namespace ToyStore.Api.Controllers
 {
@@ -26,6 +27,14 @@ namespace ToyStore.Api.Controllers
             string roleName = HttpContext.getCurrentUserRole();
             var menus = await _uow._menuRepo.getAllMenus(roleName);
             var MenusDto = _mapper.Map<List<MenuDto>>(menus);
+            return Ok(MenusDto);
+        }
+
+        [HttpPost("getMenus")]
+        [AllowAnonymous]
+        public async Task<IActionResult> getMenus(GenericPagination pagination)
+        {
+            var MenusDto = await _uow._paginationRepo.GetDataByDynamicPropertyAsync<Menu>(pagination);
             return Ok(MenusDto);
         }
 
