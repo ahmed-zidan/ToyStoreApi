@@ -12,6 +12,7 @@ namespace ToyStore.Core.SharedModels
         public  List<keyPairValueString>? Sortings { get; set; } = new List<keyPairValueString>();
         public List<keyPairValueString>? FilterStrings { get; set; } = new List<keyPairValueString>();
         public List<keyPairValueNums>? FilterNums { get; set; } = new List<keyPairValueNums>();
+        public bool IsAndOperator { get; set; }
         public int PageIdx { get; set; }
         public int PageSize { get; set; }
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Abp.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,15 +25,19 @@ namespace ToyStore.Infrastructure.Repo
             var param = Expression.Parameter(typeof(T), "x");
             var dbSet = _context.Set<T>();
             var query = dbSet.AsQueryable();
+            Expression<Func<T, bool>> predicate = pagination.IsAndOperator? PredicateBuilder.True<T>() : PredicateBuilder.False<T>() ;
+            doFilterNumbers(ref predicate, param, pagination.FilterNums,pagination.IsAndOperator);
+            doFilterStrings(ref predicate, param, pagination.FilterStrings, pagination.IsAndOperator);
             
-            doFilterNumbers(ref query, param, pagination.FilterNums);
-            doFilterStrings(ref query, param, pagination.FilterStrings);
+            query = query.Where(predicate);
+
             doSorting(ref query, param, pagination.Sortings);
             return await query.Skip(pagination.PageIdx * pagination.PageSize).Take(pagination.PageSize)
             .ToListAsync();
         }
 
-        private void doFilterStrings<T>(ref IQueryable<T> query, ParameterExpression param, List<keyPairValueString>? filterStrings) where T : class
+        private void doFilterStrings<T>(ref Expression<Func<T, bool>> predicate, ParameterExpression param, List<keyPairValueString>? filterStrings,
+            bool isAnd) where T : class
         {
             foreach (var item in filterStrings)
             {
@@ -41,11 +46,15 @@ namespace ToyStore.Infrastructure.Repo
                 var method = typeof(string).GetMethod("Contains", new[] { typeof(string) });
                 Expression comparison = Expression.Call(filterByPropertyExpression, method, filterValueExpression); ;
                 var whereExpression = Expression.Lambda<Func<T, bool>>(comparison, param);
-                query = query.Where(whereExpression);
+                if(isAnd)
+                    predicate = predicate.And(whereExpression);
+                else predicate = predicate.Or(whereExpression);
+                //query = query.Where(whereExpression);
             }
         }
 
-        private void doFilterNumbers<T>(ref IQueryable<T> query, ParameterExpression param, List<keyPairValueNums>? filterNums) where T : class
+        private void doFilterNumbers<T>(ref Expression<Func<T, bool>> predicate, ParameterExpression param, List<keyPairValueNums>? filterNums,
+            bool isAnd) where T : class
         {
             foreach (var item in filterNums)
             {
@@ -86,7 +95,10 @@ namespace ToyStore.Infrastructure.Repo
                         }
                 }
                 var whereExpression = Expression.Lambda<Func<T, bool>>(comparison, param);
-                query = query.Where(whereExpression);
+                if (isAnd)
+                    predicate = predicate.And(whereExpression);
+                else predicate = predicate.Or(whereExpression);
+                //query = query.Where(whereExpression);
             }
         }
 
