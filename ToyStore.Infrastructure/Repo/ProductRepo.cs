@@ -75,7 +75,7 @@ namespace ToyStore.Infrastructure.Repo
             filterBySearch(ref products, pagination.Search);
             filterBySizes(ref products, pagination.Sizes);
             filterByColors(ref products, pagination.Colors);
-            
+            //_context.Products.Where(x=>x.Category.Id ==1)
             return await products.CountAsync();
         }
 

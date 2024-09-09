@@ -10,5 +10,6 @@ namespace ToyStore.Core.IRepository
     public interface IPaginationRepo
     {
         Task<List<T>> GetDataByDynamicPropertyAsync<T>(GenericPagination pagination) where T : class;
+        Task<List<T>> GetDataByDynamicPropertyAsync<T>(GenericPagination pagination, List<string> includes) where T : class;
     }
 }

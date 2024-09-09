@@ -20,6 +20,26 @@ namespace ToyStore.Infrastructure.Repo
         {
             _context = context;
         }
+
+        public async Task<List<T>> GetDataByDynamicPropertyAsync<T>(GenericPagination pagination,List<string> includes) where T : class
+        {
+            var param = Expression.Parameter(typeof(T), "x");
+            var dbSet = _context.Set<T>();
+            var query = dbSet.AsQueryable();
+            Expression<Func<T, bool>> predicate = pagination.IsAndOperator ? PredicateBuilder.True<T>() : PredicateBuilder.False<T>();
+            doFilterNumbers(ref predicate, param, pagination.FilterNums, pagination.IsAndOperator);
+            doFilterStrings(ref predicate, param, pagination.FilterStrings, pagination.IsAndOperator);
+            query = query.Where(predicate);
+            doSorting(ref query, param, pagination.Sortings);
+            foreach (var item in includes) {
+                var includePropertyExpression = Expression.Property(param,item);
+                query = query.Include(item);
+            }
+
+            return await query.Skip(pagination.PageIdx * pagination.PageSize).Take(pagination.PageSize)
+            .ToListAsync();
+        }
+
         public async Task<List<T>> GetDataByDynamicPropertyAsync<T>(GenericPagination pagination) where T : class
         {
             var param = Expression.Parameter(typeof(T), "x");
@@ -28,9 +48,7 @@ namespace ToyStore.Infrastructure.Repo
             Expression<Func<T, bool>> predicate = pagination.IsAndOperator? PredicateBuilder.True<T>() : PredicateBuilder.False<T>() ;
             doFilterNumbers(ref predicate, param, pagination.FilterNums,pagination.IsAndOperator);
             doFilterStrings(ref predicate, param, pagination.FilterStrings, pagination.IsAndOperator);
-            
             query = query.Where(predicate);
-
             doSorting(ref query, param, pagination.Sortings);
             return await query.Skip(pagination.PageIdx * pagination.PageSize).Take(pagination.PageSize)
             .ToListAsync();
@@ -39,9 +57,14 @@ namespace ToyStore.Infrastructure.Repo
         private void doFilterStrings<T>(ref Expression<Func<T, bool>> predicate, ParameterExpression param, List<keyPairValueString>? filterStrings,
             bool isAnd) where T : class
         {
-            foreach (var item in filterStrings)
+            foreach (var item in filterStrings ?? [])
             {
-                var filterByPropertyExpression = Expression.Property(param, item.Name);
+                var names = item.Name.Split('.');
+                var filterByPropertyExpression = Expression.Property(param, names[0]);
+                for (int i = 1; i < names.Length; i++)
+                {
+                    filterByPropertyExpression = Expression.Property(filterByPropertyExpression, names[i]);
+                }
                 var filterValueExpression = Expression.Constant(item.Value);
                 var method = typeof(string).GetMethod("Contains", new[] { typeof(string) });
                 Expression comparison = Expression.Call(filterByPropertyExpression, method, filterValueExpression); ;
@@ -56,9 +79,14 @@ namespace ToyStore.Infrastructure.Repo
         private void doFilterNumbers<T>(ref Expression<Func<T, bool>> predicate, ParameterExpression param, List<keyPairValueNums>? filterNums,
             bool isAnd) where T : class
         {
-            foreach (var item in filterNums)
+            foreach (var item in filterNums ?? [])
             {
-                var filterByPropertyExpression = Expression.Property(param, item.Name);
+                var names = item.Name.Split('.');
+                var filterByPropertyExpression = Expression.Property(param, names[0]);
+                for (int i = 1; i < names.Length; i++)
+                {
+                    filterByPropertyExpression = Expression.Property(filterByPropertyExpression, names[i]);
+                }
                 var filterValueExpression = Expression.Constant(item.Value);
                 Expression comparison = null;
                 switch (item.Operator)

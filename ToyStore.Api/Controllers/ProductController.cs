@@ -48,6 +48,16 @@ namespace ToyStore.Api.Controllers
             Products = prDto});
         }
 
+        [HttpPost("getProducts")]
+        [AllowAnonymous]
+        public async Task<IActionResult> getProducts(GenericPagination pagination)
+        {
+            var products = await _unitOfWork._paginationRepo.
+                GetDataByDynamicPropertyAsync<Product>(pagination,new List<string>{ "colors","Sizes","Category"});
+            var prDto = _mapper.Map<List<ProductDto>>(products);
+            return Ok(prDto);
+        }
+
         [HttpPost("addProduct")]
         public async Task<ActionResult> addProduct(AddProductDto model)
         {
